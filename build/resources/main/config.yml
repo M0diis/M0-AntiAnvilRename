@@ -1,4 +1,4 @@
-M0-RenameBlocker:
+M0-AntiAnvilRename:
   RenameBlocked: '&4You cannot rename items.'
   EnableWhitelist: false
   AllowedItems:

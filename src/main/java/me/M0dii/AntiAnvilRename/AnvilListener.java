@@ -1,4 +1,4 @@
-package me.M0dii.RenameBlocker;
+package me.M0dii.AntiAnvilRename;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -21,7 +21,19 @@ public class AnvilListener implements Listener
        String renameText = e.getInventory().getRenameText();
        
        ItemStack first = e.getInventory().getFirstItem();
-       ItemStack second = e.getInventory().getSecondItem();
+       
+       for(String allowed : Config.ALLOWED_ITEMS)
+       {
+           Material allowedItem = Material.getMaterial(allowed);
+           
+           if(first != null)
+           {
+               if(first.getType().equals(allowedItem))
+               {
+                   return;
+               }
+           }
+       }
        
        if(first != null)
        {
@@ -30,19 +42,6 @@ public class AnvilListener implements Listener
            if(renameText != null)
            {
                if(!renameText.equalsIgnoreCase(firstName))
-               {
-                   e.setResult(new ItemStack(Material.AIR));
-               }
-           }
-       }
-       
-       if(second != null)
-       {
-           String secondName = second.getItemMeta().getDisplayName();
-           
-           if(renameText != null)
-           {
-               if(!renameText.equalsIgnoreCase(secondName))
                {
                    e.setResult(new ItemStack(Material.AIR));
                }

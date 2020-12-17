@@ -1,4 +1,4 @@
-package me.M0dii.RenameBlocker;
+package me.M0dii.AntiAnvilRename;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,8 +14,8 @@ public class Config
     {
         FileConfiguration cfg = plugin.getConfig();
     
-        CANNOT_RENAME = format(cfg.getString("M0-RenameBlocker.RenameBlocked"));
-        ALLOWED_ITEMS = cfg.getStringList("M0-RenameBlocker.AllowedItems");
+        CANNOT_RENAME = format(cfg.getString("M0-AntiAnvilRename.RenameBlocked"));
+        ALLOWED_ITEMS = cfg.getStringList("M0-AntiAnvilRename.AllowedItems");
     }
     
     private static String format(String text)

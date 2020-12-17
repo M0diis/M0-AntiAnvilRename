@@ -1,4 +1,4 @@
-package me.M0dii.RenameBlocker;
+package me.M0dii.AntiAnvilRename;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
