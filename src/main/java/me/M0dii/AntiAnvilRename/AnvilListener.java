@@ -61,6 +61,8 @@ public class AnvilListener implements Listener
                         if(Config.CLOSE_ON_RENAME)
                         {
                             p.closeInventory();
+                            
+                            break;
                         }
                     }
                     
