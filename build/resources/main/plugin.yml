@@ -1,0 +1,10 @@
+name: M0-RenameBlocker
+main: me.M0dii.RenameBlocker.Main
+description: M0-RenameBlocker
+version: 1.0
+api-version: 1.16
+author: M0dii
+permissions:
+  m0renameblocker.bypass:
+    description: Bypass the restriction.
+    default: op
