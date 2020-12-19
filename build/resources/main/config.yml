@@ -1,6 +1,0 @@
-M0-AntiAnvilRename:
-  RenameBlocked: '&4You cannot rename items.'
-  CloseOnAttempt: true
-  EnableWhitelist: false
-  AllowedItems:
-    - 'DIAMOND_SWORD'
