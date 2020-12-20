@@ -1,5 +1,6 @@
 package me.M0dii.AntiAnvilRename;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -19,11 +20,9 @@ public class AnvilListener implements Listener
     @EventHandler
     public void cancelRename(PrepareAnvilEvent e)
     {
-        String renameText = e.getInventory().getRenameText();
+        String renameText = ChatColor.stripColor(e.getInventory().getRenameText());
         
         ItemStack first = e.getInventory().getFirstItem();
-        
-        
         
         if(Config.WHITELIST_ENABLED)
         {
@@ -43,7 +42,7 @@ public class AnvilListener implements Listener
         
         if(first != null)
         {
-            String firstName = first.getItemMeta().getDisplayName();
+            String firstName = ChatColor.stripColor(first.getItemMeta().getDisplayName());
             
             if(renameText != null)
             {
