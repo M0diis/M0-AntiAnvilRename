@@ -3,6 +3,7 @@ package me.M0dii.AntiAnvilRename;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -24,6 +25,8 @@ public class AnvilListener implements Listener
         
         ItemStack first = e.getInventory().getFirstItem();
         
+        HumanEntity p = e.getView().getPlayer();
+        
         if(Config.WHITELIST_ENABLED)
         {
             for(String allowed : Config.ALLOWED_ITEMS)
@@ -39,6 +42,16 @@ public class AnvilListener implements Listener
                 }
             }
         }
+    
+
+        if(first != null)
+        {
+            String itemName = first.getType().name().toLowerCase();
+    
+            String allowPerm = "m0antianvilrename." + itemName + ".allow";
+            
+            if(p.hasPermission(allowPerm)) return;
+        }
         
         if(first != null)
         {
@@ -48,21 +61,16 @@ public class AnvilListener implements Listener
             {
                 if(!renameText.equalsIgnoreCase(firstName))
                 {
-                    for(HumanEntity p : e.getViewers())
+                    if(p.hasPermission("m0antianvilrename.bypass"))
                     {
-                        if(p.hasPermission("m0antianvilrename.bypass"))
-                        {
-                            return;
-                        }
-                        
-                        p.sendMessage(Config.CANNOT_RENAME);
-                        
-                        if(Config.CLOSE_ON_RENAME)
-                        {
-                            p.closeInventory();
-                            
-                            break;
-                        }
+                        return;
+                    }
+                    
+                    p.sendMessage(Config.CANNOT_RENAME);
+                    
+                    if(Config.CLOSE_ON_RENAME)
+                    {
+                        p.closeInventory();
                     }
                     
                     e.setResult(new ItemStack(Material.AIR));
