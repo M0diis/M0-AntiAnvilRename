@@ -4,3 +4,6 @@ M0-AntiAnvilRename:
   EnableWhitelist: false
   AllowedItems:
     - 'DIAMOND_SWORD'
+  EnableBlacklist: false
+  DeniedItems:
+    - 'TRIPWIRE_HOOK'

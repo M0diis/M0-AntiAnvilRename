@@ -3,7 +3,6 @@ package me.M0dii.AntiAnvilRename;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -42,8 +41,35 @@ public class AnvilListener implements Listener
                 }
             }
         }
+        
+        if(Config.BLACKLIST_ENABLED)
+        {
+            for(String s : Config.DENIED_ITEMS)
+            {
+                Material m = Material.getMaterial(s);
+                
+                if(m != null && first != null)
+                {
+                    if(m.equals(first.getType()))
+                    {
+                        if(p.hasPermission("m0antianvilrename.bypass"))
+                        {
+                            return;
+                        }
     
-
+                        p.sendMessage(Config.CANNOT_RENAME);
+    
+                        if(Config.CLOSE_ON_RENAME)
+                        {
+                            p.closeInventory();
+                        }
+    
+                        e.setResult(new ItemStack(Material.AIR));
+                    }
+                }
+            }
+        }
+        
         if(first != null)
         {
             String itemName = first.getType().name().toLowerCase();

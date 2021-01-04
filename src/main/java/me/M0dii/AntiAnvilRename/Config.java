@@ -9,8 +9,10 @@ public class Config
 {
     public static String CANNOT_RENAME;
     public static Boolean WHITELIST_ENABLED;
+    public static Boolean BLACKLIST_ENABLED;
     public static Boolean CLOSE_ON_RENAME;
     public static List<String> ALLOWED_ITEMS;
+    public static List<String> DENIED_ITEMS;
 
     public static void load(Main plugin)
     {
@@ -18,8 +20,10 @@ public class Config
     
         CANNOT_RENAME = format(cfg.getString("M0-AntiAnvilRename.RenameBlocked"));
         WHITELIST_ENABLED = cfg.getBoolean("M0-AntiAnvilRename.EnableWhitelist");
+        WHITELIST_ENABLED = cfg.getBoolean("M0-AntiAnvilRename.EnableBlacklist");
         CLOSE_ON_RENAME = cfg.getBoolean("M0-AntiAnvilRename.CloseOnAttempt");
         ALLOWED_ITEMS = cfg.getStringList("M0-AntiAnvilRename.AllowedItems");
+        DENIED_ITEMS = cfg.getStringList("M0-AntiAnvilRename.DeniedItems");
     }
     
     private static String format(String text)
