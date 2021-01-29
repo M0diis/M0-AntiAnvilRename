@@ -6,15 +6,43 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class AnvilListener implements Listener
 {
     private final Main plugin;
     
+    private final Config cfg;
+    
     public AnvilListener(Main plugin)
     {
         this.plugin = plugin;
+        
+        this.cfg = plugin.getCfg();
+    }
+    
+    @EventHandler
+    public void denyWhileHolding(PlayerCommandPreprocessEvent e)
+    {
+        String cmd = e.getMessage().split(" ")[0];
+        
+        ItemStack holding = e.getPlayer().getItemInHand();
+        
+        List<String> blockedCommands = this.cfg.getDenyHoldCommands();
+        List<Material> blockedItems = this.cfg.getDenyHoldItems();
+        
+        if(blockedCommands.contains(cmd))
+        {
+            if(blockedItems.contains(holding.getType()))
+            {
+                e.getPlayer().sendMessage(this.cfg.getDenyHoldMsg());
+                
+                e.setCancelled(true);
+            }
+        }
     }
     
     @EventHandler
@@ -26,9 +54,9 @@ public class AnvilListener implements Listener
         
         HumanEntity p = e.getView().getPlayer();
         
-        if(Config.WHITELIST_ENABLED)
+        if(this.cfg.whitelistEnabled())
         {
-            for(String allowed : Config.ALLOWED_ITEMS)
+            for(String allowed : this.cfg.getAllowedItems())
             {
                 Material allowedItem = Material.getMaterial(allowed);
                 
@@ -42,14 +70,18 @@ public class AnvilListener implements Listener
             }
         }
         
-        if(Config.BLACKLIST_ENABLED)
+        if(this.cfg.blacklistEnabled())
         {
-            for(String s : Config.DENIED_ITEMS)
+            for(Material m : this.cfg.getDeniedItems())
             {
-                Material m = Material.getMaterial(s);
-                
                 if(m != null && first != null)
                 {
+                    String itemName = first.getType().name().toLowerCase();
+    
+                    String allowPerm = "m0antianvilrename." + itemName + ".allow";
+    
+                    if(p.hasPermission(allowPerm)) return;
+
                     if(m.equals(first.getType()))
                     {
                         if(p.hasPermission("m0antianvilrename.bypass"))
@@ -57,9 +89,9 @@ public class AnvilListener implements Listener
                             return;
                         }
     
-                        p.sendMessage(Config.CANNOT_RENAME);
+                        p.sendMessage(this.cfg.getCannotRenameMsg());
     
-                        if(Config.CLOSE_ON_RENAME)
+                        if(this.cfg.closeOnRename())
                         {
                             p.closeInventory();
                         }
@@ -69,39 +101,43 @@ public class AnvilListener implements Listener
                 }
             }
         }
-        
-        if(first != null)
+        else
         {
-            String itemName = first.getType().name().toLowerCase();
-    
-            String allowPerm = "m0antianvilrename." + itemName + ".allow";
-            
-            if(p.hasPermission(allowPerm)) return;
-        }
-        
-        if(first != null)
-        {
-            String firstName = ChatColor.stripColor(first.getItemMeta().getDisplayName());
-            
-            if(renameText != null)
+            if(first != null)
             {
-                if(!renameText.equalsIgnoreCase(firstName))
+                String itemName = first.getType().name().toLowerCase();
+        
+                String allowPerm = "m0antianvilrename." + itemName + ".allow";
+        
+                if(p.hasPermission(allowPerm)) return;
+            }
+    
+            if(first != null)
+            {
+                String firstName = ChatColor.stripColor(first.getItemMeta().getDisplayName());
+        
+                if(renameText != null)
                 {
-                    if(p.hasPermission("m0antianvilrename.bypass"))
+                    if(!renameText.equalsIgnoreCase(firstName))
                     {
-                        return;
+                        if(p.hasPermission("m0antianvilrename.bypass"))
+                        {
+                            return;
+                        }
+                
+                        p.sendMessage(this.cfg.getCannotRenameMsg());
+                
+                        if(this.cfg.closeOnRename())
+                        {
+                            p.closeInventory();
+                        }
+                
+                        e.setResult(new ItemStack(Material.AIR));
                     }
-                    
-                    p.sendMessage(Config.CANNOT_RENAME);
-                    
-                    if(Config.CLOSE_ON_RENAME)
-                    {
-                        p.closeInventory();
-                    }
-                    
-                    e.setResult(new ItemStack(Material.AIR));
                 }
             }
         }
+        
+
     }
 }

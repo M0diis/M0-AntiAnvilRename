@@ -1,7 +1,7 @@
 name: M0-AntiAnvilRename
 main: me.M0dii.AntiAnvilRename.Main
 description: M0-AntiAnvilRename
-version: 1.7
+version: 1.8
 api-version: 1.16
 author: M0dii
 permissions:

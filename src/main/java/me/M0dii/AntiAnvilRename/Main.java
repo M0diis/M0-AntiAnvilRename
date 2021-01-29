@@ -23,9 +23,15 @@ public class Main extends JavaPlugin
         this.manager = getServer().getPluginManager();
     }
     
-    FileConfiguration config = null;
-    File configFile = null;
+    private FileConfiguration config = null;
+    private File configFile = null;
     
+    private Config cfg;
+    
+    public Config getCfg()
+    {
+        return cfg;
+    }
     public void onEnable()
     {
         this.configFile = new File(getDataFolder(), "config.yml");
@@ -38,7 +44,9 @@ public class Main extends JavaPlugin
             copy(getResource("config.yml"), configFile);
         }
         
-        Config.load(this);
+        this.cfg = new Config(this);
+    
+        this.cfg.load();
         
         this.manager.registerEvents(new AnvilListener(this), this);
     }

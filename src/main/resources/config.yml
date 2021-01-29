@@ -7,3 +7,9 @@ M0-AntiAnvilRename:
   EnableBlacklist: false
   DeniedItems:
     - 'TRIPWIRE_HOOK'
+  DenyWhileHolding:
+    Items:
+      - 'DIAMOND_SWORD'
+    Commands:
+      - '/rename'
+    Message: '&4You cannot use this command while holding this item'
