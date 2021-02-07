@@ -58,7 +58,8 @@ public class AnvilListener implements Listener
     
         HumanEntity p = e.getView().getPlayer();
         
-        if(loreOnly && first != null)
+        if(loreOnly && first != null
+        && !p.hasPermission("m0antianvilrename.bypass"))
         {
             ItemMeta m = first.getItemMeta();
     

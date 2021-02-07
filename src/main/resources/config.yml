@@ -3,7 +3,7 @@ M0-AntiAnvilRename:
   CloseOnAttempt: true
   EnableWhitelist: false
   OnlyWithLore:
-    Enabled: true
+    Enabled: false
     Message: '&4You cannot rename this item.'
   AllowedItems:
     - 'DIAMOND_SWORD'
