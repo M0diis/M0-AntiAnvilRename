@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -52,7 +53,43 @@ public class AnvilListener implements Listener
         
         ItemStack first = e.getInventory().getFirstItem();
         
+        boolean loreOnly = this.cfg.onlyWithLore();
+    
+    
         HumanEntity p = e.getView().getPlayer();
+        
+        if(loreOnly && first != null)
+        {
+            ItemMeta m = first.getItemMeta();
+    
+            List<String> lore = m.getLore();
+            
+            boolean hasLore = false;
+            
+            if(lore != null)
+            {
+                for(String s : lore)
+                {
+                    if(!s.isEmpty())
+                    {
+                        hasLore = true;
+            
+                        break;
+                    }
+                }
+            }
+            
+            if(hasLore)
+            {
+                if(this.cfg.closeOnRename())
+                    p.closeInventory();
+                
+                if(!this.cfg.getOnlyLoreMsg().isEmpty())
+                    p.sendMessage(this.cfg.getOnlyLoreMsg());
+    
+                e.setResult(new ItemStack(Material.AIR));
+            }
+        }
         
         if(this.cfg.whitelistEnabled())
         {
@@ -63,9 +100,7 @@ public class AnvilListener implements Listener
                 if(first != null)
                 {
                     if(first.getType().equals(allowedItem))
-                    {
                         return;
-                    }
                 }
             }
         }
@@ -85,16 +120,15 @@ public class AnvilListener implements Listener
                     if(m.equals(first.getType()))
                     {
                         if(p.hasPermission("m0antianvilrename.bypass"))
-                        {
                             return;
-                        }
     
-                        p.sendMessage(this.cfg.getCannotRenameMsg());
+                        String msg = this.cfg.getCannotRenameMsg();
+                        
+                        if(!msg.isEmpty())
+                            p.sendMessage(msg);
     
                         if(this.cfg.closeOnRename())
-                        {
                             p.closeInventory();
-                        }
     
                         e.setResult(new ItemStack(Material.AIR));
                     }
@@ -121,23 +155,17 @@ public class AnvilListener implements Listener
                     if(!renameText.equalsIgnoreCase(firstName))
                     {
                         if(p.hasPermission("m0antianvilrename.bypass"))
-                        {
                             return;
-                        }
                 
                         p.sendMessage(this.cfg.getCannotRenameMsg());
                 
                         if(this.cfg.closeOnRename())
-                        {
                             p.closeInventory();
-                        }
                 
                         e.setResult(new ItemStack(Material.AIR));
                     }
                 }
             }
         }
-        
-
     }
 }

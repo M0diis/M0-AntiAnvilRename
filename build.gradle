@@ -1,11 +1,8 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
-
-
 group 'me.M0dii'
-version '1.8'
+version '1.9'
 sourceCompatibility = '8'
 
 repositories {

@@ -2,6 +2,9 @@ M0-AntiAnvilRename:
   RenameBlocked: '&4You cannot rename items.'
   CloseOnAttempt: true
   EnableWhitelist: false
+  OnlyWithLore:
+    Enabled: true
+    Message: '&4You cannot rename this item.'
   AllowedItems:
     - 'DIAMOND_SWORD'
   EnableBlacklist: false
@@ -12,4 +15,4 @@ M0-AntiAnvilRename:
       - 'DIAMOND_SWORD'
     Commands:
       - '/rename'
-    Message: '&4You cannot use this command while holding this item'
+    Message: '&4You cannot use this command while holding this item.'

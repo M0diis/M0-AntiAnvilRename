@@ -14,6 +14,8 @@ public class Config
     private Boolean WHITELIST_ENABLED;
     private Boolean BLACKLIST_ENABLED;
     private Boolean CLOSE_ON_RENAME;
+    private Boolean ONLY_WITH_LORE;
+    private String ONLY_WITH_LORE_MSG;
     private List<String> ALLOWED_ITEMS;
     private List<Material> DENIED_ITEMS;
     
@@ -40,6 +42,9 @@ public class Config
         
         CLOSE_ON_RENAME = cfg.getBoolean(prefix + "CloseOnAttempt");
         ALLOWED_ITEMS = cfg.getStringList(prefix + "AllowedItems");
+        
+        ONLY_WITH_LORE = cfg.getBoolean(prefix + "OnlyWithLore.Enabled");
+        ONLY_WITH_LORE_MSG = format(cfg.getString(prefix + "OnlyWithLore.Message"));
         
         List<String> deniedItems = cfg.getStringList(prefix + "DeniedItems");
         
@@ -130,5 +135,15 @@ public class Config
     public List<Material> getDeniedItems()
     {
         return DENIED_ITEMS;
+    }
+    
+    public boolean onlyWithLore()
+    {
+        return this.ONLY_WITH_LORE;
+    }
+    
+    public String getOnlyLoreMsg()
+    {
+        return this.ONLY_WITH_LORE_MSG;
     }
 }
