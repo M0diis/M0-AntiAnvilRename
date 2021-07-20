@@ -1,7 +1,7 @@
 name: M0-AntiAnvilRename
 main: me.M0dii.AntiAnvilRename.AAR
 description: M0-AntiAnvilRename
-version: 1.10
+version: 1.11
 api-version: 1.16
 author: M0dii
 commands:
@@ -9,7 +9,7 @@ commands:
     description: Main command.
     permission: m0antianvilrename.command.reload
     usage: /<command>
-    aliases: [aar,antirename]
+    aliases: [aar, antirename]
 permissions:
   m0antianvilrename.bypass:
     description: Bypass the restriction.

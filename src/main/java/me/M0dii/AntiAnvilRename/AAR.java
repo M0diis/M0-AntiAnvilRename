@@ -1,5 +1,9 @@
 package me.M0dii.AntiAnvilRename;
 
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.CustomChart;
+import org.bstats.charts.MultiLineChart;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -7,6 +11,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AAR extends JavaPlugin
 {
@@ -45,6 +51,44 @@ public class AAR extends JavaPlugin
         
         if(cmd != null)
             cmd.setExecutor(new CommandHandler(this));
+        
+        setupMetrics();
+    
+        checkForUpdates();
+    }
+    
+    private void checkForUpdates()
+    {
+        new UpdateChecker(this, 86811).getVersion(ver ->
+        {
+            String curr = this.getDescription().getVersion();
+            
+            if (!curr.equalsIgnoreCase(
+                    ver.replace("v", "")))
+            {
+                getLogger().info("You are running an outdated version of M0-CoreCord.");
+                getLogger().info("Latest version: " + ver + ", you are using: " + curr);
+                getLogger().info("You can download the latest version on Spigot:");
+                getLogger().info("https://www.spigotmc.org/resources/m0-antianvilrename.86811/");
+            }
+        });
+    }
+    
+    private void setupMetrics()
+    {
+        Metrics metrics = new Metrics(this, 12132);
+        
+        CustomChart c = new MultiLineChart("players_and_servers", () ->
+        {
+            Map<String, Integer> valueMap = new HashMap<>();
+            
+            valueMap.put("servers", 1);
+            valueMap.put("players", Bukkit.getOnlinePlayers().size());
+            
+            return valueMap;
+        });
+        
+        metrics.addCustomChart(c);
     }
     
     private void prepareConfig()

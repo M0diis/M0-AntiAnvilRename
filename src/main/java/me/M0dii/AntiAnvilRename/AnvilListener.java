@@ -11,19 +11,15 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AnvilListener implements Listener
 {
-    private final AAR plugin;
-    
     private final Config cfg;
     
     public AnvilListener(AAR plugin)
     {
-        this.plugin = plugin;
-        
+    
         this.cfg = plugin.getCfg();
     }
     
