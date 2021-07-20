@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 group 'me.M0dii'
-version '1.9'
+version '1.10'
 sourceCompatibility = '8'
 
 repositories {

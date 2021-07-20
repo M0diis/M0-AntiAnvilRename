@@ -1,26 +1,20 @@
 package me.M0dii.AntiAnvilRename;
 
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
-public class Main extends JavaPlugin
+public class AAR extends JavaPlugin
 {
-    private static Main plugin;
+    private final PluginManager pm;
     
-    private PluginManager manager;
-    
-    private boolean loaded;
-    
-    public Main()
+    public AAR()
     {
-        this.manager = getServer().getPluginManager();
+        this.pm = getServer().getPluginManager();
     }
     
     private FileConfiguration config = null;
@@ -32,23 +26,53 @@ public class Main extends JavaPlugin
     {
         return cfg;
     }
+    
+    public void renewConfig()
+    {
+        this.configFile = new File(this.getDataFolder(), "config.yml");
+        this.config = YamlConfiguration.loadConfiguration(this.configFile);
+        
+        this.cfg.load(this, this.config);
+    }
+    
     public void onEnable()
     {
-        this.configFile = new File(getDataFolder(), "config.yml");
-        this.config = YamlConfiguration.loadConfiguration(this.configFile);
+        prepareConfig();
+        
+        this.pm.registerEvents(new AnvilListener(this), this);
     
+        PluginCommand cmd = this.getCommand("antianvilrename");
+        
+        if(cmd != null)
+            cmd.setExecutor(new CommandHandler(this));
+    }
+    
+    private void prepareConfig()
+    {
+        this.configFile = new File(this.getDataFolder(), "config.yml");
+        
         if(!this.configFile.exists())
         {
+            //noinspection ResultOfMethodCallIgnored
             this.configFile.getParentFile().mkdirs();
-        
-            copy(getResource("config.yml"), configFile);
+            
+            this.copy(this.getResource("config.yml"), this.configFile);
         }
         
-        this.cfg = new Config(this);
-    
-        this.cfg.load();
+        try
+        {
+            this.getConfig().options().copyDefaults(true);
+            this.getConfig().save(this.configFile);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
         
-        this.manager.registerEvents(new AnvilListener(this), this);
+        this.config = YamlConfiguration.loadConfiguration(this.configFile);
+    
+        this.cfg = new Config();
+        this.cfg.load(this, this.config);
     }
     
     private void copy(InputStream in, File file)
@@ -86,6 +110,6 @@ public class Main extends JavaPlugin
     
     public void onDisable()
     {
-        this.manager.disablePlugin(this);
+        this.pm.disablePlugin(this);
     }
 }

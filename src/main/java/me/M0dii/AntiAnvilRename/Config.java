@@ -16,23 +16,24 @@ public class Config
     private Boolean CLOSE_ON_RENAME;
     private Boolean ONLY_WITH_LORE;
     private String ONLY_WITH_LORE_MSG;
+
+    private List<String> WORD_BLACKLIST;
+    
     private List<String> ALLOWED_ITEMS;
     private List<Material> DENIED_ITEMS;
     
     private List<String> DENY_HOLD_CMDS;
     private List<Material> DENY_HOLDING_ITEMS;
     
-    private final Main plugin;
+    private String NO_PERMISSION_MSG;
+    private String RELOADED_CONFIG_MSG;
     
-    public Config(Main plugin)
+    public Config()
     {
-        this.plugin = plugin;
     }
     
-    public void load()
+    public void load(AAR plugin, FileConfiguration cfg)
     {
-        FileConfiguration cfg = this.plugin.getConfig();
-    
         String prefix = "M0-AntiAnvilRename.";
         
         CANNOT_RENAME = format(cfg.getString(prefix + "RenameBlocked"));
@@ -53,6 +54,11 @@ public class Config
         DENY_HOLD_MSG = format(cfg.getString("M0-AntiAnvilRename.DenyWhileHolding.Message"));
         DENY_HOLD_CMDS = cfg.getStringList("M0-AntiAnvilRename.DenyWhileHolding.Commands");
         List<String> denyHoldItems = cfg.getStringList("M0-AntiAnvilRename.DenyWhileHolding.Items");
+        
+        WORD_BLACKLIST = cfg.getStringList("M0-AntiAnvilRename.WordBlacklist");
+        
+        NO_PERMISSION_MSG = format(cfg.getString("M0-AntiAnvilRename.NoPermission"));
+        RELOADED_CONFIG_MSG = format(cfg.getString("M0-AntiAnvilRename.ConfigReloaded"));
         
         this.setUpDenyHoldItems(denyHoldItems);
     }
@@ -145,5 +151,19 @@ public class Config
     public String getOnlyLoreMsg()
     {
         return this.ONLY_WITH_LORE_MSG;
+    }
+    
+    public String getNO_PERMISSION_MSG()
+    {
+        return NO_PERMISSION_MSG;
+    }
+    public String getRELOADED_CONFIG_MSG()
+    {
+        return RELOADED_CONFIG_MSG;
+    }
+    
+    public List<String> getWordBlacklist()
+    {
+        return this.WORD_BLACKLIST;
     }
 }

@@ -3,6 +3,7 @@ package me.M0dii.AntiAnvilRename;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -10,15 +11,16 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AnvilListener implements Listener
 {
-    private final Main plugin;
+    private final AAR plugin;
     
     private final Config cfg;
     
-    public AnvilListener(Main plugin)
+    public AnvilListener(AAR plugin)
     {
         this.plugin = plugin;
         
@@ -30,6 +32,11 @@ public class AnvilListener implements Listener
     {
         String cmd = e.getMessage().split(" ")[0];
         
+        Player p = e.getPlayer();
+    
+        if(p.hasPermission("m0antianvilrename.bypass.commands"))
+            return;
+        
         ItemStack holding = e.getPlayer().getItemInHand();
         
         List<String> blockedCommands = this.cfg.getDenyHoldCommands();
@@ -37,6 +44,11 @@ public class AnvilListener implements Listener
         
         if(blockedCommands.contains(cmd))
         {
+            for(String bl : cfg.getWordBlacklist())
+                for(String c : e.getMessage().split(" "))
+                    if(c.toLowerCase().contains(bl) || c.equalsIgnoreCase(bl))
+                        e.setCancelled(true);
+            
             if(blockedItems.contains(holding.getType()))
             {
                 e.getPlayer().sendMessage(this.cfg.getDenyHoldMsg());
@@ -54,31 +66,19 @@ public class AnvilListener implements Listener
         ItemStack first = e.getInventory().getFirstItem();
         
         boolean loreOnly = this.cfg.onlyWithLore();
-    
-    
-        HumanEntity p = e.getView().getPlayer();
         
-        if(loreOnly && first != null
-        && !p.hasPermission("m0antianvilrename.bypass"))
+        HumanEntity p = e.getView().getPlayer();
+    
+        if(p.hasPermission("m0antianvilrename.bypass"))
+            return;
+        
+        if(loreOnly && first != null)
         {
             ItemMeta m = first.getItemMeta();
     
             List<String> lore = m.getLore();
-            
-            boolean hasLore = false;
-            
-            if(lore != null)
-            {
-                for(String s : lore)
-                {
-                    if(!s.isEmpty())
-                    {
-                        hasLore = true;
-            
-                        break;
-                    }
-                }
-            }
+    
+            boolean hasLore = lore != null && lore.stream().anyMatch(s -> !s.isEmpty());
             
             if(hasLore)
             {
@@ -91,6 +91,11 @@ public class AnvilListener implements Listener
                 e.setResult(new ItemStack(Material.AIR));
             }
         }
+        
+        for(String bl : cfg.getWordBlacklist())
+            if(renameText != null &&
+                    (renameText.toLowerCase().contains(bl) || renameText.equalsIgnoreCase(bl)))
+                e.setResult(new ItemStack(Material.AIR));
         
         if(this.cfg.whitelistEnabled())
         {
@@ -120,9 +125,6 @@ public class AnvilListener implements Listener
 
                     if(m.equals(first.getType()))
                     {
-                        if(p.hasPermission("m0antianvilrename.bypass"))
-                            return;
-    
                         String msg = this.cfg.getCannotRenameMsg();
                         
                         if(!msg.isEmpty())
@@ -140,11 +142,13 @@ public class AnvilListener implements Listener
         {
             if(first != null)
             {
-                String itemName = first.getType().name().toLowerCase();
+                String itemName = first.getType().name();
         
-                String allowPerm = "m0antianvilrename." + itemName + ".allow";
+                String allowPerm1 = "m0antianvilrename." + itemName.toLowerCase() + ".allow";
+                String allowPerm2 = "m0antianvilrename." + itemName.toUpperCase() + ".allow";
         
-                if(p.hasPermission(allowPerm)) return;
+                if(p.hasPermission(allowPerm1)
+                || p.hasPermission(allowPerm2)) return;
             }
     
             if(first != null)
@@ -155,9 +159,6 @@ public class AnvilListener implements Listener
                 {
                     if(!renameText.equalsIgnoreCase(firstName))
                     {
-                        if(p.hasPermission("m0antianvilrename.bypass"))
-                            return;
-                
                         p.sendMessage(this.cfg.getCannotRenameMsg());
                 
                         if(this.cfg.closeOnRename())

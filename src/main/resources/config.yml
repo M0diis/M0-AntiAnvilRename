@@ -1,4 +1,6 @@
 M0-AntiAnvilRename:
+  ConfigReloaded: '&aConfig has been reloaded.'
+  NoPermission: '&cYou do not have permission to use this command.'
   RenameBlocked: '&4You cannot rename items.'
   CloseOnAttempt: true
   EnableWhitelist: false
@@ -16,3 +18,6 @@ M0-AntiAnvilRename:
     Commands:
       - '/rename'
     Message: '&4You cannot use this command while holding this item.'
+  WordBlacklist:
+    - "badword"
+    - "otherbadword"
