@@ -9,5 +9,5 @@ Commands and permissions can be found in `./src/main/resources/plugin.yml`.
 To build the plugin yourself, you need JDK 8 or higher installed on your system. Then, run the following command:
 
 ```
-gradlew build
+gradlew shadowjar
 ```
