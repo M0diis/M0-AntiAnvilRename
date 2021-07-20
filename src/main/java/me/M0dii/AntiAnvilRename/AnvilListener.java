@@ -33,7 +33,7 @@ public class AnvilListener implements Listener
         if(p.hasPermission("m0antianvilrename.bypass.commands"))
             return;
         
-        ItemStack holding = e.getPlayer().getItemInHand();
+        ItemStack holding = e.getPlayer().getInventory().getItemInMainHand();
         
         List<String> blockedCommands = this.cfg.getDenyHoldCommands();
         List<Material> blockedItems = this.cfg.getDenyHoldItems();
