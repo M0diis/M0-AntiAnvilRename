@@ -1,8 +1,8 @@
 name: M0-AntiAnvilRename
 main: me.M0dii.AntiAnvilRename.AAR
 description: M0-AntiAnvilRename
-version: 1.11
-api-version: 1.16
+version: 1.11.2
+api-version: 1.14
 author: M0dii
 commands:
   antianvilrename:
