@@ -31,7 +31,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
                     this.plugin.renewConfig();
 
                     sender.sendMessage(this.cfg.getConfigReloadedMsg());
-                } else sender.sendMessage(this.cfg.getNoPermissionMsg());
+                } else {
+                    sender.sendMessage(this.cfg.getNoPermissionMsg());
+                }
 
                 return true;
             }

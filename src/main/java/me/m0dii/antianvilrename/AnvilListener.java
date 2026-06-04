@@ -32,7 +32,7 @@ public class AnvilListener implements Listener {
 
         ItemStack holding = e.getPlayer().getInventory().getItemInMainHand();
 
-        if(holding.getType().isAir()) {
+        if (holding.getType().isAir()) {
             return;
         }
 
@@ -55,7 +55,7 @@ public class AnvilListener implements Listener {
 
     @EventHandler
     public void cancelRename(final PrepareAnvilEvent e) {
-        String renameText = ChatColor.stripColor(e.getInventory().getRenameText());
+        String renameText = ChatColor.stripColor(e.getView().getRenameText());
 
         ItemStack first = e.getInventory().getFirstItem();
 
@@ -63,8 +63,9 @@ public class AnvilListener implements Listener {
 
         HumanEntity p = e.getView().getPlayer();
 
-        if (p.hasPermission("m0antianvilrename.bypass"))
+        if (p.hasPermission("m0antianvilrename.bypass")) {
             return;
+        }
 
         if (loreOnly && first != null) {
             ItemMeta m = first.getItemMeta();
@@ -74,49 +75,58 @@ public class AnvilListener implements Listener {
             boolean hasLore = lore != null && lore.stream().anyMatch(s -> !s.isEmpty());
 
             if (hasLore) {
-                if (this.cfg.getCloseOnRename())
+                if (Boolean.TRUE.equals(this.cfg.getCloseOnRename())) {
                     p.closeInventory();
+                }
 
-                if (!this.cfg.getOnlyWithLoreMsg().isEmpty())
+                if (!this.cfg.getOnlyWithLoreMsg().isEmpty()) {
                     p.sendMessage(this.cfg.getOnlyWithLoreMsg());
+                }
 
                 e.setResult(new ItemStack(Material.AIR));
             }
         }
 
-        for (String bl : cfg.getWordBlacklist())
+        for (String bl : cfg.getWordBlacklist()) {
             if (renameText != null &&
-                    (renameText.toLowerCase().contains(bl) || renameText.equalsIgnoreCase(bl)))
+                    (renameText.toLowerCase().contains(bl) || renameText.equalsIgnoreCase(bl))) {
                 e.setResult(new ItemStack(Material.AIR));
+            }
+        }
 
-        if (this.cfg.getWhitelistEnabled()) {
+        if (Boolean.TRUE.equals(this.cfg.getWhitelistEnabled())) {
             for (String allowed : this.cfg.getAllowedItems()) {
                 Material allowedItem = Material.getMaterial(allowed);
 
                 if (first != null) {
-                    if (first.getType().equals(allowedItem))
+                    if (first.getType().equals(allowedItem)) {
                         return;
+                    }
                 }
             }
         }
 
-        if (this.cfg.getBlacklistEnabled()) {
+        if (Boolean.TRUE.equals(this.cfg.getBlacklistEnabled())) {
             for (Material m : this.cfg.getForbiddenItems()) {
                 if (m != null && first != null) {
                     String itemName = first.getType().name().toLowerCase();
 
                     String allowPerm = "m0antianvilrename." + itemName + ".allow";
 
-                    if (p.hasPermission(allowPerm)) return;
+                    if (p.hasPermission(allowPerm)) {
+                        return;
+                    }
 
                     if (m.equals(first.getType())) {
                         String msg = this.cfg.getCannotRenameMsg();
 
-                        if (!msg.isEmpty())
+                        if (!msg.isEmpty()) {
                             p.sendMessage(msg);
+                        }
 
-                        if (this.cfg.getCloseOnRename())
+                        if (Boolean.TRUE.equals(this.cfg.getCloseOnRename())) {
                             p.closeInventory();
+                        }
 
                         e.setResult(new ItemStack(Material.AIR));
                     }
@@ -128,7 +138,9 @@ public class AnvilListener implements Listener {
             String allowPerm1 = "m0antianvilrename." + itemName.toLowerCase() + ".allow";
             String allowPerm2 = "m0antianvilrename." + itemName.toUpperCase() + ".allow";
 
-            if (p.hasPermission(allowPerm1) || p.hasPermission(allowPerm2)) return;
+            if (p.hasPermission(allowPerm1) || p.hasPermission(allowPerm2)) {
+                return;
+            }
 
             ItemMeta itemMeta = first.getItemMeta();
 
@@ -139,7 +151,7 @@ public class AnvilListener implements Listener {
                     if (!renameText.equalsIgnoreCase(firstName)) {
                         p.sendMessage(this.cfg.getCannotRenameMsg());
 
-                        if (this.cfg.getCloseOnRename()) {
+                        if (Boolean.TRUE.equals(this.cfg.getCloseOnRename())) {
                             p.closeInventory();
                         }
 

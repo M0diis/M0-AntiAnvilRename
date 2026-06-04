@@ -1,5 +1,6 @@
 package me.m0dii.antianvilrename;
 
+import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.MultiLineChart;
@@ -10,7 +11,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,11 +29,8 @@ public class AntiAnvilRenamePlugin extends JavaPlugin {
     private FileConfiguration config = null;
     private File configFile = null;
 
+    @Getter
     private Config cfg;
-
-    public Config getCfg() {
-        return cfg;
-    }
 
     public void renewConfig() {
         this.configFile = new File(this.getDataFolder(), "config.yml");
@@ -37,6 +39,7 @@ public class AntiAnvilRenamePlugin extends JavaPlugin {
         this.cfg.load(this.config);
     }
 
+    @Override
     public void onEnable() {
         prepareConfig();
 
@@ -44,8 +47,9 @@ public class AntiAnvilRenamePlugin extends JavaPlugin {
 
         PluginCommand cmd = this.getCommand("antianvilrename");
 
-        if (cmd != null)
+        if (cmd != null) {
             cmd.setExecutor(new CommandHandler(this));
+        }
 
         setupMetrics();
 
@@ -113,9 +117,7 @@ public class AntiAnvilRenamePlugin extends JavaPlugin {
             return;
         }
 
-        try {
-            OutputStream out = new FileOutputStream(file);
-
+        try (OutputStream out = Files.newOutputStream(file.toPath())) {
             byte[] buf = new byte[1024];
 
             int len;
@@ -124,7 +126,6 @@ public class AntiAnvilRenamePlugin extends JavaPlugin {
                 out.write(buf, 0, len);
             }
 
-            out.close();
             in.close();
         } catch (Exception e) {
             this.getLogger().warning("Error copying resource: " + e.getMessage());
@@ -132,8 +133,4 @@ public class AntiAnvilRenamePlugin extends JavaPlugin {
         }
     }
 
-
-    public void onDisable() {
-        this.pm.disablePlugin(this);
-    }
 }

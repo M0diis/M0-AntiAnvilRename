@@ -1,5 +1,5 @@
 name: M0-AntiAnvilRename
-main: me.M0dii.AntiAnvilRename.AAR
+main: me.m0dii.antianvilrename.AntiAnvilRenamePlugin
 description: M0-AntiAnvilRename
 version: 1.11.2
 api-version: 1.14

@@ -29,9 +29,6 @@ public class Config {
     private String noPermissionMsg;
     private String configReloadedMsg;
 
-    public Config() {
-    }
-
     public void load(FileConfiguration cfg) {
         String prefix = "M0-AntiAnvilRename.";
 
